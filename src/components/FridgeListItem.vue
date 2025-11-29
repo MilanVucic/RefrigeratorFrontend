@@ -9,11 +9,11 @@
         Details
       </RouterLink>
 
-      <button class="edit-btn" @click="$emit('edit', fridge)">
+      <button class="edit-btn" @click="$emit('edit', fridge.id)">
         Edit
       </button>
 
-      <button class="delete-btn" @click="$emit('delete', fridge)">
+      <button class="delete-btn" @click="$emit('delete', fridge.id)">
         Delete
       </button>
     </div>
@@ -32,18 +32,6 @@ export default defineComponent({
       type: Object as () => FridgeType,
       required: true,
     },
-  },
-
-  setup() {
-    const onEdit = () => {
-      console.log('Edit clicked (not implemented yet)');
-    };
-
-    const onDelete = () => {
-      console.log('Delete clicked (not implemented yet)');
-    };
-
-    return {onEdit, onDelete};
   },
 });
 </script>

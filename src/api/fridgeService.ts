@@ -24,7 +24,8 @@ export const fridgeService = {
         return response.data;
     },
 
-    async deleteFridge(id: number): Promise<void> {
-        await api.delete(`fridges/${id}/`);
+    async deleteFridge(id: number) {
+        const response = await api.delete(`fridges/${id}/`);
+        return response.data;
     },
 };

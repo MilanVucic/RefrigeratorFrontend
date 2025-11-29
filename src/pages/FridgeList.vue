@@ -39,13 +39,19 @@ export default defineComponent({
       router.push('/fridges/new');
     };
 
-    const editFridge = (fridge: FridgeType) => {
-      router.push(`/fridges/${fridge.id}/edit`);
+    const editFridge = (fridgeId: number) => {
+      router.push(`/fridges/${fridgeId}/edit`);
     };
 
     const deleteFridge = async (id: number) => {
-      // will hook up later
-      console.log('Delete fridge', id);
+      if (!confirm('Are you sure you want to delete this fridge?')) return;
+
+      try {
+        await fridgeService.deleteFridge(id);
+        fridges.value = fridges.value.filter(f => f.id !== id);
+      } catch (err: any) {
+        alert(err.message || 'Failed to delete fridge');
+      }
     };
 
     const fetchFridges = async () => {
