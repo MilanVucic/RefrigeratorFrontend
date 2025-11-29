@@ -4,7 +4,8 @@
     <p v-if="error" class="error">{{ error }}</p>
 
     <div v-if="!loading && fridges.length">
-      <FridgeComponent
+      <h2>Your fridges:</h2>
+      <FridgeListItem
           v-for="fridge in fridges"
           :key="fridge.id"
           :fridge="fridge"
@@ -19,11 +20,11 @@
 import { defineComponent, ref, onMounted } from 'vue';
 import { fridgeService } from '../api/fridgeService';
 import type { FridgeType } from '../types/fridgeType';
-import FridgeComponent from '../components/FridgeComponent.vue';
+import FridgeListItem from '../components/FridgeListItem.vue';
 import { useAuthStore } from '../stores/auth';
 
 export default defineComponent({
-  components: { FridgeComponent },
+  components: { FridgeListItem },
   setup() {
     const auth = useAuthStore();
     const fridges = ref<FridgeType[]>([]);
