@@ -86,13 +86,13 @@ export const useFridgeStore = defineStore('fridge', {
             }
         },
 
-        async addItem(fridgeId: number, data: Partial<FridgeItemType>) {
+        async addItem(data: Partial<FridgeItemType>) {
             this.loading = true;
             this.error = null;
             try {
-                const newItem = await fridgeService.createItem(fridgeId, data);
+                const newItem = await fridgeService.createItem(data);
 
-                const fridge = this.fridges.find(f => f.id === fridgeId);
+                const fridge = this.fridges.find(f => f.id === newItem.fridge);
                 if (fridge) {
                     if (!fridge.items) fridge.items = [];
                     fridge.items.push(newItem);

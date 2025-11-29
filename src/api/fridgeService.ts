@@ -30,8 +30,8 @@ export const fridgeService = {
 
     // --- Items ---
 
-    async createItem(fridgeId: number, data: Partial<FridgeItemType>): Promise<FridgeItemType> {
-        const response = await api.post<FridgeItemType>(`fridges/${fridgeId}/items/`, data);
+    async createItem(data: Partial<FridgeItemType>): Promise<FridgeItemType> {
+        const response = await api.post<FridgeItemType>(`/items/`, data);
         return response.data;
     },
 

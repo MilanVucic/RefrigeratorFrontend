@@ -1,7 +1,8 @@
 export interface FridgeItemType {
-    id: number;
+    id?: number;
     name: string;
     quantity: number;
+    fridge: number;
     time_stored: string;
     best_before: string;
 }

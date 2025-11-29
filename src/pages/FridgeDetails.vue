@@ -20,7 +20,6 @@ export default defineComponent({
     const store = useFridgeStore();
     const fridgeId = Number(route.params.id);
 
-    // Make fridge reactive from store
     const fridge = computed<FridgeType | undefined>(() =>
         store.fridges.find(f => f.id === fridgeId)
     );

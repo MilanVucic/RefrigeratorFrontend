@@ -90,6 +90,7 @@ export default defineComponent({
   padding: 0.5rem;
   margin-bottom: 0.5rem;
   border-radius: 4px;
+  width: 400px;
 }
 .field {
   display: flex;
@@ -97,7 +98,8 @@ export default defineComponent({
   align-items: center;
 }
 .field label {
-  width: 90px;
+  text-align: start;
+  width: 100px;
   font-weight: bold;
 }
 .field input {
