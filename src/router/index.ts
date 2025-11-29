@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router';
 import Login from '../pages/Login.vue';
 import FridgeList from '../pages/FridgeList.vue';
 import FridgeDetails from '../pages/FridgeDetails.vue';
+import FridgeForm from '../pages/FridgeForm.vue';
 import Register from '../pages/Register.vue';
 import { useAuthStore } from '../stores/auth';
 
@@ -18,6 +19,9 @@ const routes = [
     { path: '/login', component: Login },
     { path: '/fridges', component: FridgeList },
     { path: '/fridges/:id', component: FridgeDetails, props: true },
+    { path: '/fridges/new', component: FridgeForm },
+    { path: '/fridges/:id/edit', component: FridgeForm, props: true },
+
 ];
 
 const router = createRouter({

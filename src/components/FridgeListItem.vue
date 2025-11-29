@@ -9,11 +9,11 @@
         Details
       </RouterLink>
 
-      <button class="edit-btn" @click="onEdit">
+      <button class="edit-btn" @click="$emit('edit', fridge)">
         Edit
       </button>
 
-      <button class="delete-btn" @click="onDelete">
+      <button class="delete-btn" @click="$emit('delete', fridge)">
         Delete
       </button>
     </div>

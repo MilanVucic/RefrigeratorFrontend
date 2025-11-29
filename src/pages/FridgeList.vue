@@ -5,10 +5,13 @@
 
     <div v-if="!loading && fridges.length">
       <h2>Your fridges:</h2>
+      <button @click="newFridge" class="new-fridge">+ New Fridge</button>
       <FridgeListItem
           v-for="fridge in fridges"
           :key="fridge.id"
           :fridge="fridge"
+          @edit="editFridge"
+          @delete="deleteFridge"
       />
     </div>
 
@@ -22,6 +25,7 @@ import { fridgeService } from '../api/fridgeService';
 import type { FridgeType } from '../types/fridgeType';
 import FridgeListItem from '../components/FridgeListItem.vue';
 import { useAuthStore } from '../stores/auth';
+import router from "../router";
 
 export default defineComponent({
   components: { FridgeListItem },
@@ -30,6 +34,19 @@ export default defineComponent({
     const fridges = ref<FridgeType[]>([]);
     const loading = ref(false);
     const error = ref<string | null>(null);
+
+    const newFridge = () => {
+      router.push('/fridges/new');
+    };
+
+    const editFridge = (fridge: FridgeType) => {
+      router.push(`/fridges/${fridge.id}/edit`);
+    };
+
+    const deleteFridge = async (id: number) => {
+      // will hook up later
+      console.log('Delete fridge', id);
+    };
 
     const fetchFridges = async () => {
       loading.value = true;
@@ -47,7 +64,13 @@ export default defineComponent({
       if (auth.accessToken) fetchFridges();
     });
 
-    return { fridges, loading, error };
+    return { fridges, loading, error, newFridge, editFridge, deleteFridge };
   },
 });
 </script>
+
+<style scoped>
+.new-fridge {
+  margin: 8px;
+}
+</style>
