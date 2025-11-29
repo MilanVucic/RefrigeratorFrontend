@@ -7,9 +7,9 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
+import { defineComponent, computed, onMounted } from 'vue';
 import { useRoute } from 'vue-router';
-import { fridgeService } from '../api/fridgeService';
+import { useFridgeStore } from '../stores/fridgeStore';
 import type { FridgeType } from '../types/fridgeType';
 import FridgeComponent from '../components/FridgeComponent.vue';
 
@@ -17,25 +17,30 @@ export default defineComponent({
   components: { FridgeComponent },
   setup() {
     const route = useRoute();
-    const fridge = ref<FridgeType | null>(null);
-    const loading = ref(false);
-    const error = ref<string | null>(null);
+    const store = useFridgeStore();
+    const fridgeId = Number(route.params.id);
 
-    const fetchFridge = async () => {
-      loading.value = true;
-      error.value = null;
-      try {
-        fridge.value = await fridgeService.getFridge(Number(route.params.id));
-      } catch (err: any) {
-        error.value = err.message || 'Failed to fetch fridge';
-      } finally {
-        loading.value = false;
+    // Make fridge reactive from store
+    const fridge = computed<FridgeType | undefined>(() =>
+        store.fridges.find(f => f.id === fridgeId)
+    );
+
+    const loading = computed(() => store.loading);
+    const error = computed(() => store.error);
+
+    onMounted(async () => {
+      if (!fridge.value) {
+        await store.getFridge(fridgeId);
       }
-    };
-
-    onMounted(fetchFridge);
+    });
 
     return { fridge, loading, error };
   },
 });
 </script>
+
+<style scoped>
+.error {
+  color: red;
+}
+</style>

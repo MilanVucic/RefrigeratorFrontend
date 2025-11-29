@@ -23,13 +23,14 @@
 <script lang="ts">
 import { defineComponent, ref, computed, onMounted } from 'vue';
 import { useRoute, useRouter } from 'vue-router';
-import { fridgeService } from '../api/fridgeService';
+import { useFridgeStore } from '../stores/fridgeStore';
 import type { FridgeType } from '../types/fridgeType';
 
 export default defineComponent({
   setup() {
     const router = useRouter();
     const route = useRoute();
+    const store = useFridgeStore();
 
     const fridgeId = Number(route.params.id);
     const isEdit = computed(() => !!fridgeId);
@@ -41,12 +42,15 @@ export default defineComponent({
       description: ''
     });
 
-    // Load fridge if editing
     onMounted(async () => {
       if (!isEdit.value) return;
 
       try {
-        const fridge: FridgeType = await fridgeService.getFridge(fridgeId);
+        let fridge: FridgeType | undefined = store.fridges.find(f => f.id === fridgeId);
+        if (!fridge) {
+          fridge = await store.getFridge(fridgeId);
+        }
+
         form.value.name = fridge.name;
         form.value.description = fridge.description || '';
       } catch (err: any) {
@@ -59,9 +63,9 @@ export default defineComponent({
 
       try {
         if (isEdit.value) {
-          await fridgeService.updateFridge(fridgeId, form.value);
+          await store.updateFridge(fridgeId, form.value);
         } else {
-          await fridgeService.createFridge(form.value);
+          await store.createFridge(form.value);
         }
 
         await router.push('/fridges');

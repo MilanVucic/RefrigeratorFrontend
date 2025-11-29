@@ -4,7 +4,7 @@ import FridgeList from '../pages/FridgeList.vue';
 import FridgeDetails from '../pages/FridgeDetails.vue';
 import FridgeForm from '../pages/FridgeForm.vue';
 import Register from '../pages/Register.vue';
-import { useAuthStore } from '../stores/auth';
+import { useAuthStore } from '../stores/authStore.ts';
 
 const routes = [
     {

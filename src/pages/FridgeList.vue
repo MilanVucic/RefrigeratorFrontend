@@ -3,9 +3,10 @@
     <p v-if="loading">Loading...</p>
     <p v-if="error" class="error">{{ error }}</p>
 
+    <button @click="newFridge" class="new-fridge">+ New Fridge</button>
+
     <div v-if="!loading && fridges.length">
       <h2>Your fridges:</h2>
-      <button @click="newFridge" class="new-fridge">+ New Fridge</button>
       <FridgeListItem
           v-for="fridge in fridges"
           :key="fridge.id"
@@ -20,57 +21,40 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, ref, onMounted } from 'vue';
-import { fridgeService } from '../api/fridgeService';
-import type { FridgeType } from '../types/fridgeType';
+import { defineComponent, onMounted, ref } from 'vue';
+import { useFridgeStore } from '../stores/fridgeStore';
+import { storeToRefs } from 'pinia';
 import FridgeListItem from '../components/FridgeListItem.vue';
-import { useAuthStore } from '../stores/auth';
-import router from "../router";
+import router from '../router';
 
 export default defineComponent({
   components: { FridgeListItem },
   setup() {
-    const auth = useAuthStore();
-    const fridges = ref<FridgeType[]>([]);
-    const loading = ref(false);
-    const error = ref<string | null>(null);
+    const store = useFridgeStore();
+    const { fridges, loading, error } = storeToRefs(store);
+    const deletingId = ref<number | null>(null);
 
-    const newFridge = () => {
-      router.push('/fridges/new');
-    };
-
-    const editFridge = (fridgeId: number) => {
-      router.push(`/fridges/${fridgeId}/edit`);
-    };
+    const newFridge = () => router.push('/fridges/new');
+    const editFridge = (fridgeId: number) => router.push(`/fridges/${fridgeId}/edit`);
 
     const deleteFridge = async (id: number) => {
       if (!confirm('Are you sure you want to delete this fridge?')) return;
 
       try {
-        await fridgeService.deleteFridge(id);
-        fridges.value = fridges.value.filter(f => f.id !== id);
-      } catch (err: any) {
-        alert(err.message || 'Failed to delete fridge');
-      }
-    };
-
-    const fetchFridges = async () => {
-      loading.value = true;
-      error.value = null;
-      try {
-        fridges.value = await fridgeService.getFridges();
-      } catch (err: any) {
-        error.value = err.message || 'Failed to fetch fridges';
+        deletingId.value = id;
+        await store.deleteFridge(id);
+      } catch (err) {
+        console.error('Error deleting fridge:', err);
       } finally {
-        loading.value = false;
+        deletingId.value = null;
       }
     };
 
     onMounted(() => {
-      if (auth.accessToken) fetchFridges();
+      store.fetchFridges();
     });
 
-    return { fridges, loading, error, newFridge, editFridge, deleteFridge };
+    return { fridges, loading, error, newFridge, editFridge, deleteFridge, deletingId };
   },
 });
 </script>
@@ -78,5 +62,8 @@ export default defineComponent({
 <style scoped>
 .new-fridge {
   margin: 8px;
+}
+.error {
+  color: red;
 }
 </style>

@@ -1,11 +1,10 @@
 import api from "../api.ts";
-import type {FridgeType} from "../types/fridgeType.ts";
-
+import type { FridgeItemType, FridgeType } from "../types/fridgeType.ts";
 
 export const fridgeService = {
+    // --- Fridges ---
     async getFridges(): Promise<FridgeType[]> {
         const response = await api.get<FridgeType[]>('fridges/');
-        console.log(response);
         return response.data;
     },
 
@@ -26,6 +25,23 @@ export const fridgeService = {
 
     async deleteFridge(id: number) {
         const response = await api.delete(`fridges/${id}/`);
+        return response.data;
+    },
+
+    // --- Items ---
+
+    async createItem(fridgeId: number, data: Partial<FridgeItemType>): Promise<FridgeItemType> {
+        const response = await api.post<FridgeItemType>(`fridges/${fridgeId}/items/`, data);
+        return response.data;
+    },
+
+    async updateItem(id: number, data: Partial<FridgeItemType>): Promise<FridgeItemType> {
+        const response = await api.patch<FridgeItemType>(`items/${id}/`, data);
+        return response.data;
+    },
+
+    async deleteItem(id: number) {
+        const response = await api.delete(`items/${id}/`);
         return response.data;
     },
 };

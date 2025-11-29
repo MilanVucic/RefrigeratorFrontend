@@ -1,6 +1,6 @@
 import axios, { AxiosError } from 'axios';
 import type { AxiosRequestConfig } from 'axios';
-import { useAuthStore } from './stores/auth';
+import { useAuthStore } from './stores/authStore.ts';
 
 // Extend AxiosRequestConfig to include _retry flag
 // This will be used to prevent more than 1 retry per request
